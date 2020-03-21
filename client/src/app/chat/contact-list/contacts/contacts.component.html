@@ -1,0 +1,15 @@
+<div *ngFor="let contact of contacts">
+  <a (click)=checkConversation(contact)>
+    <div class="row">
+      <div class="col-3 col-sm-auto col-md-auto p-1">
+        <img class="img-fluid profile-img" [src]=imageData>
+      </div>
+      <div class="col-9 p-3">
+        <p><b>{{ contact.firstname }} {{ contact.lastname }}</b></p>
+        <p class="text-secondary font-italic">{{ contact.email }}</p>
+      </div>
+    </div>
+    <hr>
+  </a>
+</div>
+<!-- <div>{{ contacts | json }}</div> -->

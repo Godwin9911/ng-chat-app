@@ -1,0 +1,46 @@
+/* You can add global styles to this file, and also import other style files */
+@import "~bootstrap/dist/css/bootstrap.min.css";
+@import "~font-awesome/css/font-awesome.min.css";
+
+p,hr {
+  padding: 0rem;
+  margin: 0rem;
+}
+
+hr {
+  margin-bottom: 1rem;
+}
+
+.line-clamp {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+}
+
+.profile-img {
+  width: 5rem;
+  border-radius: 50%;
+}
+
+.chat-img {
+  width: 2rem;
+  padding: auto;
+  border-radius: 50%;
+}
+
+.chat-other {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 20%;
+  transform: translate(-50%, -50%);
+}
+
+@media  screen and (min-width: 700px){
+  .chat-other {
+    left: 15%;
+  }
+}
+

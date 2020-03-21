@@ -1,0 +1,44 @@
+<div class="container col-md-8">
+  <div class="card border h-100">
+    <div style="height: 10vh; position: relative;" class="card-header">
+      <div class="chat-other">
+        <img class="chat-img" src="https://randomuser.me/api/portraits/men/20.jpg" />
+        <span class="ml-2"><b>{{ selectedUser?.firstname }} {{ selectedUser?.lastname }}</b></span>
+      </div>
+    </div>
+    <div #scrollMe [scrollTop]="scrollMe.scrollHeight" style="overflow-y: scroll; height: 70vh;" class="card-body p-0">
+      <div style="width: fit-content;" *ngFor="let message of messages.conversation"
+      [ngClass]="{'bg-light ml-auto text-right' : message.author._id == loggedInUser._id}"
+      class="border rounded m-2 p-1">
+        <p class="m-0">{{ message.body }}</p>
+        <small class="text-muted">{{ message.createdAt }}</small>
+      </div>
+      <div *ngIf="!messages.conversation">
+        <div class="alert alert-info">
+          <p><strong>{{ errorMessage.status }}</strong> {{ errorMessage.statusText }}, {{ errorMessage.message }}</p>
+          <p *ngIf="errorMessage.status == 404">You have no messages, send message to begin chat</p>
+        </div>
+      </div>
+    </div>
+    <div style="height: 20vh;" class="bg-light">
+      <form #form="ngForm" (ngSubmit)="sendMessage(form)">
+        <div class="form-group">
+          <label for="exampleTextarea"></label>
+          <textarea
+          class="form-control"
+          id="exampleTextarea"
+          rows="2"
+          spellcheck="false"
+          placeholder="Type your message here..."
+          name="composedMessage"
+          [(ngModel)]="composedMessage"
+          ></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Send Message</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+<!--<p>{{ selectedUser | json }}</p> -->
