@@ -1,15 +1,28 @@
-<div class="container mt-5">
-  <div class="col-md-6 m-auto">
-    <div class="card card-body text-center p-5">
-      <h1>NG-CHAT-APP</h1>
-      <p>Create a free account or login</p>
-      <a [routerLink]="['/register']" class="btn btn-primary text-light btn-block mb-2">
-        Register
-      </a>
-      <a [routerLink]="['/login']" class="btn btn-dark text-light btn-block mb-2">
-        Login
-      </a>
-      <small class="mt-4">Ng-forum allows registered users to ask and answer questions<br>Created by <a href="https://twitter.com/GodwinAgedah">@GodwinAgedah</a> &copy;2020</small>
+<div class="father">
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="#">NG-CHAT-APP</a>
+      </div>
+    </div>
+  </nav>
+  <div class="row child login">
+    <div class="col-md-6 order-2">
+      <div class="card-body text-center p-2 father2">
+        <div class="child2">
+          <h1 class="text-success">NG-CHAT-APP</h1>
+          <p class="mb-4">Create a free account or login</p>
+          <!-- <a [routerLink]="['/register']" class="btn btn-primary text-light btn-block mb-2">
+            Register
+          </a> -->
+          <a [routerLink]="['/login']" class="btn btn-success text-light btn-block mb-2"><i class="fa fa-envelope"></i> Continue with Email</a>
+          <a class="btn btn-primary text-light btn-block mb-4" ><img class="icon" src="assets/images/google.svg"> Continue with Google</a>
+          <small class="mt-5">create an account and start chatting <br>Created by <a href="https://twitter.com/GodwinAgedah">@GodwinAgedah</a> &copy;2020</small>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 order-md-12">
+      <img class="image-responsive w-100" src="assets/images/chat1.svg">
     </div>
   </div>
 </div>

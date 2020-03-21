@@ -1,56 +1,74 @@
+<div class="father p-2">
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="#">NG-CHAT-APP</a>
+      </div>
+    </div>
+  </nav>
+  <div class="row child">
+    <div class="col-lg-8 order-2">
+      <img class="image-responsive w-100" src="assets/images/login.svg">
+    </div>
+    <div class="col-lg-4 order-md-12 bg-light">
+      <div class="card-body p-4">
+        <h1 class="text-center mb-3 d-none"><i class="fa fa-user"></i> Login</h1>
+        <span class="alert alert-danger" *ngIf="errorMessage">
+          {{ errorMessage }}
+        </span>
+        <form #form="ngForm" (ngSubmit)="login(form)">
+          <div class="form-group">
+            <label for="emailId">Email</label>
+            <input
+              type="email"
+              id="emailId"
+              name="email"
+              class="form-control"
+              placeholder="Enter Email"
+              [(ngModel)]="email"
+              email
+              required
+              #emailField="ngModel"
+              [ngClass]="{'is-invalid' : form.submitted && emailField.invalid}"
+            />
+            <span class="invalid-feedback" *ngIf="form.submitted && emailField.invalid">
+              Please Enter a valid Email
+            </span>
+          </div>
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              class="form-control"
+              placeholder="Enter Password"
+              [(ngModel)]="password"
+              required
+              #passwordField="ngModel"
+              [ngClass]="{'is-invalid' : form.submitted && passwordField.invalid}"
+            />
+            <span class="invalid-feedback" *ngIf="form.submitted && passwordField.invalid">
+              Please Enter your password
+            </span>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block">Login</button>
+        </form>
 
-<div class="container mt-5">
-  <div class="col-md-6 m-auto">
-    <div class="card card-body">
-      <h1 class="text-center mb-3"><i class="fa fa-user"></i> Login</h1>
-      <span class="alert alert-danger" *ngIf="errorMessage">
-        {{ errorMessage }}
-      </span>
-      <form #form="ngForm" (ngSubmit)="login(form)">
-        <div class="form-group">
-          <label for="emailId">Email</label>
-          <input
-            type="email"
-            id="emailId"
-            name="email"
-            class="form-control"
-            placeholder="Enter Email"
-            [(ngModel)]="email"
-            email
-            required
-            #emailField="ngModel"
-            [ngClass]="{'is-invalid' : form.submitted && emailField.invalid}"
-          />
-          <span class="invalid-feedback" *ngIf="form.submitted && emailField.invalid">
-            Please Enter a valid Email
-          </span>
+        <p class="p-3 text-center">OR</p>
+
+        <div class="google-btn">
+          <button class="btn btn-primary w-100" ><img class="icon" src="assets/images/google.svg"> Login with Google</button>
         </div>
-        <div class="form-group">
-          <label for="password">Password</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            class="form-control"
-            placeholder="Enter Password"
-            [(ngModel)]="password"
-            required
-            #passwordField="ngModel"
-            [ngClass]="{'is-invalid' : form.submitted && passwordField.invalid}"
-          />
-          <span class="invalid-feedback" *ngIf="form.submitted && passwordField.invalid">
-            Please Enter your password
-          </span>
-        </div>
-        <button type="submit" class="btn btn-primary btn-block">Login</button>
-      </form>
-      <p class="lead mt-4">
-        Don't have an Acccount? <a [routerLink]="['/register']">Register</a>
-      </p>
-      <p class="text-secondary small">
-        This is for testing purposes, your information will not be shared with
-        anyone
-      </p>
+
+        <p class="lead mt-4">
+          Don't have an Acccount? <a [routerLink]="['/register']">Register</a>
+        </p>
+        <p class="text-secondary small">
+          This is for testing purposes, your information will not be shared with
+          anyone
+        </p>
+      </div>
     </div>
   </div>
 </div>

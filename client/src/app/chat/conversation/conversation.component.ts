@@ -20,6 +20,7 @@ export class ConversationComponent implements OnInit {
   composedMessage;
   _id;
   loggedInUser = this.authUser.currentUser;
+  isloading = false;
 
   get messages() {
     return this.conversationService.messages;
@@ -68,6 +69,7 @@ export class ConversationComponent implements OnInit {
   }
 
   sendMessage(form: NgForm) {
+    this.isloading = !this.isloading;
     if (form.valid) {
       const { composedMessage } = form.value;
       // console.log(form.value);
@@ -85,6 +87,7 @@ export class ConversationComponent implements OnInit {
         });
     }
     form.resetForm();
+    return this.isloading = !this.isloading;
    // alert(this.selectedUser._id);
   }
 
