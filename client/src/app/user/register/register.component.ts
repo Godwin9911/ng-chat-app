@@ -4,6 +4,7 @@ import { User } from '../user';
 import { Error } from '../../core/error';
 import { AuthService } from '../auth.service';
 import { Router } from '@angular/router';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 function passwordMatcher( c: AbstractControl): { [key: string]: boolean } | null {
   const passwordControl = c.get('password');
@@ -32,7 +33,8 @@ export class RegisterComponent implements OnInit {
 
   constructor(private fb: FormBuilder,
               private authservice: AuthService,
-              private router: Router) { }
+              private router: Router,
+              private spinner: NgxSpinnerService ) { }
 
   ngOnInit() {
     this.registerForm = this.fb.group({
@@ -47,15 +49,20 @@ export class RegisterComponent implements OnInit {
   }
 
   save() {
+    this.spinner.show();
     const { firstname, lastname, email, passwordGroup: { password } } = this.registerForm.value;
     this.authservice.register({ firstname, lastname, email, password })
       .subscribe({
         next: (data: User) => {
           if (data) {
+            this.spinner.hide();
             this.router.navigate(['/login']);
           }
         },
-        error: (err: Error)  => this.errorMessage = `${err.message}`
+        error: (err: Error)  => {
+          this.spinner.hide();
+          this.errorMessage = `${err.message}`;
+        }
       });
   }
 

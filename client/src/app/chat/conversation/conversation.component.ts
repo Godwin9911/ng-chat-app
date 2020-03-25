@@ -8,6 +8,7 @@ import { Error } from '../../core/error';
 import { ScrollToBottomDirective } from 'src/app/scroll-to-bottom.directive';
 import { SocketService } from 'src/app/socket.service';
 import { Subscription } from 'rxjs';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 
 @Component({
@@ -21,10 +22,11 @@ export class ConversationComponent implements OnInit, OnDestroy {
   private subscriptionOne: Subscription;
   private subscriptionTwo: Subscription;
   private subscriptionThree: Subscription;
+  selectedUser = this.contactService.selectedUser;
   errorMessage: Error;
   composedMessage;
   _id;
-  loggedInUser = this.authUser.currentUser;
+  loggedInUser = this.authUser.CurrentUserValue;
   isloading = false;
 
   get messages() {
@@ -41,16 +43,14 @@ export class ConversationComponent implements OnInit, OnDestroy {
    return this.conversationService.messages.conversation = [ msg ];
   }
 
-  get selectedUser() {
-    return this.contactService.selectedUser;
-  }
-
   constructor(private conversationService: ConversationService,
               private contactService: ContactService,
               private route: ActivatedRoute,
               private router: Router,
               private authUser: AuthService,
-              private socketService: SocketService) {
+              private socketService: SocketService,
+              private spinner: NgxSpinnerService
+              ) {
     const routerEnv = router.events.subscribe((event: NavigationStart) => {
         if (event.navigationTrigger === 'popstate') {
           this.ngOnDestroy();
@@ -60,11 +60,19 @@ export class ConversationComponent implements OnInit, OnDestroy {
 }
 
   ngOnInit() {
+    this.spinner.show();
+    this.socketService.setupSocketConnection();
     this.conversationService.clearMessages = [];
     this.subscriptionOne = this.socketService
       .getMessages()
       .subscribe({
-        next: (msg) => this.conversationService.messages.conversation.push(msg.reply),
+        next: (msg) => {
+          if (this.selectedUser._id === msg.sender) {
+            return this.conversationService.messages.conversation = [ ...this.conversationService.messages.conversation, msg.reply];
+          }
+          return;
+          // this.conversationService.messages.conversation.push(msg.reply);
+        },
         error: (err) => console.log(err)
       });
     const id = this.route.snapshot.paramMap.get('id');
@@ -72,17 +80,20 @@ export class ConversationComponent implements OnInit, OnDestroy {
           return this.subscriptionTwo =  this.conversationService.checkConversation(id)
           .subscribe({
             next: data => this.conversationService.messages = data,
-            error: (err) => this.errorMessage = err
+            error: (err) => { this.errorMessage = err; this.spinner.hide(); },
+            complete: () => this.spinner.hide()
           });
       }
-    this.subscriptionThree = this.conversationService.getMessages(id)
+    return this.subscriptionThree = this.conversationService.getMessages(id)
       .subscribe({
-        next: data => console.log('get messages'),
-        error: (err) => this.errorMessage = err
+        // next: data => console.log('get messages'),
+        error: (err) => { this.errorMessage = err; this.spinner.hide(); },
+        complete: () => this.spinner.hide()
       });
   }
 
   ngOnDestroy(): void {
+    this.socketService.disconnect();
     this.subscriptionOne?.unsubscribe();
     this.subscriptionTwo?.unsubscribe();
     this.subscriptionThree?.unsubscribe();

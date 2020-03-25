@@ -3,6 +3,7 @@ import { ContactService } from '../contact.service';
 import { Router, NavigationEnd, NavigationStart } from '@angular/router';
 import { SocketService } from 'src/app/socket.service';
 import { Subscription } from 'rxjs';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-chats',
@@ -25,7 +26,8 @@ export class ChatsComponent implements OnInit, OnDestroy {
 
   constructor(private contactService: ContactService,
               private router: Router,
-              private socketService: SocketService) {
+              private socketService: SocketService,
+              private spinner: NgxSpinnerService) {
 
     const routerEnv = router.events.subscribe((event: NavigationStart) => {
       if (event.navigationTrigger === 'popstate') {
@@ -36,12 +38,7 @@ export class ChatsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.contactService.getConversations()
-      .subscribe({
-        // next: (data) => this.conversations = data,
-        error: (err) => this.errorMessage = err
-      });
-
+    this.spinner.show();
     this.subscription = this.socketService
       .getMessages()
       .subscribe((msg) => {
@@ -67,10 +64,17 @@ export class ChatsComponent implements OnInit, OnDestroy {
         return this.contactService.coversations.conversations = [...conversations];
 
       });
+    return this.contactService.getConversations()
+      .subscribe({
+        // next: (data) => console.log(data),
+        error: (err) => { this.errorMessage = err;  this.spinner.hide();},
+        complete: () => this.spinner.hide()
+      });
   }
 
   ngOnDestroy(): void {
     this.subscription?.unsubscribe();
+    this.socketService.disconnect();
   }
 
   viewMessages(selectedUser, conversationId) {

@@ -1,3 +1,4 @@
+<ngx-spinner><p style="font-size: 20px; color: white">Loading...</p></ngx-spinner>
 <div class="father p-2">
   <nav class="navbar navbar-inverse navbar-fixed-top">
     <div class="container-fluid">
@@ -13,9 +14,9 @@
     <div class="col-lg-4 order-md-12 bg-light">
       <div class="card-body p-4">
         <h1 class="text-center mb-3 d-none"><i class="fa fa-user"></i> Login</h1>
-        <span class="alert alert-danger" *ngIf="errorMessage">
+        <div class="alert alert-danger" *ngIf="errorMessage">
           {{ errorMessage }}
-        </span>
+        </div>
         <form #form="ngForm" (ngSubmit)="login(form)">
           <div class="form-group">
             <label for="emailId">Email</label>

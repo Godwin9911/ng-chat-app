@@ -8,13 +8,15 @@
     </div>
     <div #scrollMe [scrollTop]="scrollMe.scrollHeight" style="overflow-y: scroll; height: 80vh;" class="card-body p-0">
 
-      <div class="w-50">
-        <div style="width: fit-content;" *ngFor="let message of messages.conversation"
-        [ngClass]="{'bg-light ml-auto text-right' : message.author._id == loggedInUser._id}"
-        class="border rounded m-2 p-1">
+      <div>
+        <span class="d-inline w-50" *ngFor="let message of messages.conversation">
+          <div style="width: fit-content; width: -moz-fit-content;"
+          [ngClass]="{'bg-light ml-auto text-right' : message.author._id == loggedInUser._id}"
+          class="border rounded m-2 p-1 dont-break-out">
           <p class="m-0">{{ message.body }}</p>
           <small class="text-muted">{{ message.createdAt }}</small>
         </div>
+      </span>
       </div>
       <div *ngIf="!messages.conversation">
         <div class="alert alert-info">
@@ -27,10 +29,9 @@
       <form #form="ngForm" (ngSubmit)="sendMessage(form)">
         <div class="row">
           <div class="col-10 pr-0">
-            <div class="msg-div">
-              <label for="exampleTextarea"></label>
+            <div class="msg-div h-100">
               <textarea
-              class="form-control"
+              class="form-control h-100"
               id="exampleTextarea"
               rows="1"
               spellcheck="false"
@@ -41,7 +42,7 @@
             </div>
           </div>
           <div class="col-2 p-0">
-            <button type="submit" class="btn btn-primary w-75"><i class="fa fa-paper-plane"></i></button>
+            <button type="submit" class="btn btn-primary w-75 h-100"><i class="fa fa-paper-plane"></i></button>
           </div>
         </div>
       </form>

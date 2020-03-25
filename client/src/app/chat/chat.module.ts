@@ -7,6 +7,7 @@ import { ChatsComponent } from './contact-list/chats/chats.component';
 import { ContactsComponent } from './contact-list/contacts/contacts.component';
 import { SettingsComponent } from './contact-list/settings/settings.component';
 import { FormsModule } from '@angular/forms';
+import { SocketService } from '../socket.service';
 
 
 @NgModule({
@@ -34,5 +35,8 @@ import { FormsModule } from '@angular/forms';
       },
     ])
   ],
+  providers: [
+    SocketService
+  ]
 })
 export class ChatModule { }

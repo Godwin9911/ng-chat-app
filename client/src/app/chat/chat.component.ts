@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AuthService } from '../user/auth.service';
+import { SocketService } from '../socket.service';
 
 @Component({
   selector: 'app-chat',
@@ -72,15 +73,21 @@ import { AuthService } from '../user/auth.service';
   `,
   styles: []
 })
-export class ChatComponent implements OnInit {
+export class ChatComponent implements OnInit, OnDestroy {
 
   get AuthUser() {
-    return this.authservice.currentUser;
+    return this.authservice.CurrentUserValue;
   }
 
-  constructor(private authservice: AuthService) {}
+  constructor(private authservice: AuthService,
+              private socket: SocketService) {}
 
   ngOnInit(): void {
+    this.socket.setupSocketConnection();
+  }
+
+  ngOnDestroy() {
+    this.socket.disconnect();
   }
 
 }

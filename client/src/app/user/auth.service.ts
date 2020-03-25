@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
+import { Observable, throwError, BehaviorSubject } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { User } from './user';
 import { Error } from '../core/error';
@@ -9,13 +9,21 @@ import { Error } from '../core/error';
   providedIn: 'root'
 })
 export class AuthService {
-currentUser: User;
+private currentUserSubject: BehaviorSubject<User>;
+public currentUser: Observable<User>;
 
 get isLoggedIn(): boolean {
   return !!this.currentUser;
 }
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+    this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentUser')));
+    this.currentUser = this.currentUserSubject.asObservable();
+  }
+
+  public get CurrentUserValue(): User {
+    return this.currentUserSubject.value;
+  }
 
   private userUrl = 'api/user';
 
@@ -32,7 +40,8 @@ get isLoggedIn(): boolean {
     return this.http.post<User>(`${this.userUrl}/login`, {email, password}, { headers })
       .pipe(
         tap(data => {
-          this.currentUser = data;
+          localStorage.setItem('currentUser', JSON.stringify(data));
+          this.currentUserSubject.next(data);
         }),
         catchError(this.handleError)
       );
@@ -43,8 +52,9 @@ get isLoggedIn(): boolean {
       .pipe(
         tap( data => {
           if ( data instanceof Object) {
-             this.currentUser = data;
-            }
+            localStorage.setItem('currentUser', JSON.stringify(data));
+            this.currentUserSubject.next(data);
+          }
         }),
         catchError(this.handleError)
       );

@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import io from 'socket.io-client';
-import { Observable } from 'rxjs';
+import * as io from 'socket.io-client';
+import { Observable, Subscription } from 'rxjs';
 // import { ContactService } from './chat/contact-list/contact.service';
 import { AuthService } from './user/auth.service';
+import { User } from './user/user';
 
 @Injectable({
   providedIn: 'root'
@@ -10,32 +11,42 @@ import { AuthService } from './user/auth.service';
 export class SocketService {
 
   // private url = 'http://localhost:5000';
-  // private socket;
+  private socket;
 
-  get AuthUserId() {
-    return this.authService.currentUser?._id;
-  }
+  theUser = JSON.parse(localStorage.getItem('currentUser'));
+  currentUser: User;
+  currentSubscription: Subscription;
 
   constructor(private authService: AuthService) {
-    // this.socket = io(this.url);
+    this.currentSubscription = this.authService.currentUser.subscribe(user => {
+      this.currentUser = user;
+    });
+  }
+
+  public setupSocketConnection() {
+    this.socket = io('http://localhost:5000');
+  }
+
+  public disconnect() {
+    this.socket.disconnect();
   }
 
   public sendMessage(message, reciepientId) {
-    const socket = io('http://localhost:5000');
-    socket.emit( `message${reciepientId}`, message);
+    // socket = io('http://localhost:5000');
+    this.socket.emit( `message${reciepientId}`, message);
   }
 
   public getMessages = () => {
-    const socket = io('http://localhost:5000');
+    // const socket = io('http://localhost:5000');
     return Observable.create((observer) => {
-      console.log(this.AuthUserId);
-      socket.on(`message${this.AuthUserId}`, (message) => {
-            console.log(message);
+      if (this.theUser._id) {
+          this.socket.on(`message${this.theUser._id}`, (message) => {
             observer.next(message);
         });
-      return () => {
-          socket.disconnect();
-        };
+          return () => {
+            this.socket.disconnect();
+          };
+      }
     });
 }
 }

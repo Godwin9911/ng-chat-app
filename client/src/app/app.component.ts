@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from './user/auth.service';
 import { Router } from '@angular/router';
-import { SocketService } from './socket.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-root',
@@ -16,12 +16,19 @@ export class AppComponent implements OnInit {
   }
 
   constructor(private authservice: AuthService,
-              private router: Router) {}
+              private router: Router,
+              private spinner: NgxSpinnerService) {}
 
   ngOnInit() {
+    // this.spinner.show();
     this.authservice.checkAuthenticationStatus().subscribe({
       complete: () => this.router.navigateByUrl('/chat')
     });
+
+    /*setTimeout(() => {
+      this.spinner.hide();
+    }, 10000);
+    */
   }
 
   logOut(): void {

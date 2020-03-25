@@ -4,6 +4,9 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const flash = require('connect-flash');
+const path = require('path');
+const dotenv = require('dotenv');
+dotenv.config();
 const PORT = process.env.PORT || 5000;
 
 //init app
@@ -12,9 +15,16 @@ const http = require('http').createServer(app);
 const io = require('socket.io')(http);
 app.set('socketio', io);
 
+let socket_id = [];
+
 // socket connection
 io.on('connection', function (socket) {
   console.log('a user connected');
+  socket_id.push(socket.id);
+  if ( socket_id[0] === socket.id) {
+    io.removeAllListeners('connection');
+    console.log(socket_id);
+  }
   socket.on('disconnect', function (){
     console.log('user disconnected');
   });
@@ -27,7 +37,9 @@ require('./config/passport')(passport);
 const db = require('./config/keys').MongoURI;
 
 //connect to Mongo
-mongoose.connect(db, {useNewUrlParser: true , useUnifiedTopology: true }).then(() => console.log('MongoDB Connected..')).catch(err => console.log(err));
+mongoose.connect(db, {useNewUrlParser: true , useUnifiedTopology: true })
+        .then(() => console.log('MongoDB Connected..'))
+        .catch(err => console.log(err));
 
 //Bodyparser
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -50,8 +62,18 @@ app.use(flash());
 app.use('/api/user', require('./routes/usersRoute'));
 app.use('/api/message', require('./routes/messagesRoute'));
 
-app.get('/', (req, res) => {
+/*app.get('/', (req, res) => {
   res.send('Welcome to my NG_CHAT_APP api')
 })
+*/
+
+// serve static assets in prod
+/*if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, 'client', 'dist', 'client')));
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'client', 'dist', 'client', 'index.html'));
+  });
+}
+*/
 
 http.listen(PORT, console.log(`server started on port ${PORT}`));

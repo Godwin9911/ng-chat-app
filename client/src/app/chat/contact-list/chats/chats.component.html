@@ -15,5 +15,12 @@
       <hr>
     </a>
   </div>
+  <div class="mt-5">
+    <div *ngIf=!conversations?.conversations class="text-center">
+      <img class="image-responsive w-25 mt-5" src="assets/images/nochat.svg">
+      <div>You have no chats</div>
+      <button class="btn btn-outline-success" [routerLink]="['/chat/contacts']" routerLinkActive="router-link-active" >Begin Chat</button>
+    </div>
+  </div>
 </div>
 

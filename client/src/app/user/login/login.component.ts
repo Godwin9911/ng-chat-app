@@ -4,6 +4,7 @@ import { AuthService } from '../auth.service';
 import { User } from '../user';
 import { Error } from '../../core/error';
 import { Router } from '@angular/router';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-login',
@@ -16,23 +17,29 @@ export class LoginComponent implements OnInit {
   errorMessage: string;
 
   constructor(private authservice: AuthService,
-              private router: Router) { }
+              private router: Router,
+              private spinner: NgxSpinnerService) { }
 
   ngOnInit() {
   }
 
   login(form: NgForm) {
     if (form.valid) {
+      this.spinner.show();
       const { email, password } = form.value;
-      console.log(form.value);
+      // console.log(form.value);
       this.authservice.login(email, password)
         .subscribe({
           next: (data: User) => {
             if (this.authservice.isLoggedIn) {
+              this.spinner.hide();
               this.router.navigate(['/chat']);
             }
           },
-          error: (err: Error)  =>   this.errorMessage = `${err.statusText}, ${err.message || ''}`
+          error: (err: Error)  =>  {
+            this.spinner.hide();
+            this.errorMessage = `${err.statusText}, ${err.message || ''}`
+          }
         });
     }
   }

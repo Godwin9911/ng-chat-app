@@ -32,11 +32,11 @@ router.post('/login', passport.authenticate('local', {
   (req, res, next) => {
     // let { id, firstname, lastname, email } = req.user
     res.status(200).json(req.user);
-    next();
+    return next();
   })
   .get('/login', (req, res) => {
     const message = req.flash('error');
-    res.status(401).json({ message });
+    return res.status(401).json({ message });
   });
 
 

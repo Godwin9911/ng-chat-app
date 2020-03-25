@@ -8,8 +8,9 @@ const Conversation = require('../models/ConversationModel');
 
 
 const sendMessageViaSocket = (req, reply, reciepientId, newChat=true) => {
-  const io = req.app.get('socketio')
-  return io.emit(`message${reciepientId}`, {reply, newChat});
+  const io = req.app.get('socketio');
+  const sender = req.user._id;
+  return io.emit(`message${reciepientId}`, {reply, sender, newChat});
 }
 
 const getMessagesInConversation = (req, res, next) => { 
@@ -45,13 +46,18 @@ router.get('/check-conversation/:reciepient', async (req, res, next) => {
 
 // Get my active conversations -- TODO - sort by last sentng 
 router.get('/conversations', (req, res, next) => {
-  const { user } = req;
-  Conversation.find({ participants: user })
-    .sort('-createdAt')
+  // const { user } = req;
+  Conversation.find({ participants: req.user._id }, (err, doc) => {
+    if (err) throw err;
+    if (doc.length == 0) {
+      res.status(404);
+      return next();
+    }
+  }).sort('-createdAt')
     .select('_id participants')
     .populate({
       path: 'participants',
-      match: { _id: { $ne: user } },
+      match: { _id: { $ne: req.user._id } },
       select: "firstname lastname"
     })
     .exec(function(err, conversations) {
@@ -84,7 +90,7 @@ router.get('/conversations', (req, res, next) => {
             }
           });
       });
-  });
+    });
 });
 
 // Get messages in a conversation
