@@ -1,11 +1,13 @@
 import { Component, OnInit, ViewChild, OnChanges, OnDestroy } from '@angular/core';
 import { ConversationService } from './conversation.service';
-import { Route, ActivatedRoute, ActivatedRouteSnapshot, Router } from '@angular/router';
+import { Route, ActivatedRoute, ActivatedRouteSnapshot, Router, NavigationStart } from '@angular/router';
 import { ContactService } from '../contact-list/contact.service';
 import { NgForm } from '@angular/forms';
 import { AuthService } from 'src/app/user/auth.service';
 import { Error } from '../../core/error';
 import { ScrollToBottomDirective } from 'src/app/scroll-to-bottom.directive';
+import { SocketService } from 'src/app/socket.service';
+import { Subscription } from 'rxjs';
 
 
 @Component({
@@ -13,9 +15,12 @@ import { ScrollToBottomDirective } from 'src/app/scroll-to-bottom.directive';
   templateUrl: './conversation.component.html',
   styles: []
 })
-export class ConversationComponent implements OnInit {
+export class ConversationComponent implements OnInit, OnDestroy {
   @ViewChild(ScrollToBottomDirective)
   // scroll: ScrollToBottomDirective;
+  private subscriptionOne: Subscription;
+  private subscriptionTwo: Subscription;
+  private subscriptionThree: Subscription;
   errorMessage: Error;
   composedMessage;
   _id;
@@ -40,32 +45,47 @@ export class ConversationComponent implements OnInit {
     return this.contactService.selectedUser;
   }
 
-  /*get loggedInUser() {
-    return this.authUser.currentUser;
-  }
-  */
-
   constructor(private conversationService: ConversationService,
               private contactService: ContactService,
               private route: ActivatedRoute,
               private router: Router,
-              private authUser: AuthService) { }
+              private authUser: AuthService,
+              private socketService: SocketService) {
+    const routerEnv = router.events.subscribe((event: NavigationStart) => {
+        if (event.navigationTrigger === 'popstate') {
+          this.ngOnDestroy();
+          routerEnv.unsubscribe();
+        }
+      });
+}
 
   ngOnInit() {
     this.conversationService.clearMessages = [];
+    this.subscriptionOne = this.socketService
+      .getMessages()
+      .subscribe({
+        next: (msg) => this.conversationService.messages.conversation.push(msg.reply),
+        error: (err) => console.log(err)
+      });
     const id = this.route.snapshot.paramMap.get('id');
     if (this.route.snapshot.paramMap.get('name') === 'contacts') {
-        return this.conversationService.checkConversation(id)
-        .subscribe({
-          next: data => this.conversationService.messages = data,
-          error: (err) => this.errorMessage = err
-        });
-    }
-    this.conversationService.getMessages(id)
-    .subscribe({
-      // next: data => console.log(data),
-      error: (err) => this.errorMessage = err
-    });
+          return this.subscriptionTwo =  this.conversationService.checkConversation(id)
+          .subscribe({
+            next: data => this.conversationService.messages = data,
+            error: (err) => this.errorMessage = err
+          });
+      }
+    this.subscriptionThree = this.conversationService.getMessages(id)
+      .subscribe({
+        next: data => console.log('get messages'),
+        error: (err) => this.errorMessage = err
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptionOne?.unsubscribe();
+    this.subscriptionTwo?.unsubscribe();
+    this.subscriptionThree?.unsubscribe();
   }
 
   sendMessage(form: NgForm) {
@@ -90,5 +110,7 @@ export class ConversationComponent implements OnInit {
     return this.isloading = !this.isloading;
    // alert(this.selectedUser._id);
   }
+
+
 
 }

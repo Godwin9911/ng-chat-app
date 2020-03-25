@@ -4,9 +4,21 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const flash = require('connect-flash');
+const PORT = process.env.PORT || 5000;
 
 //init app
 const app = express();
+const http = require('http').createServer(app);
+const io = require('socket.io')(http);
+app.set('socketio', io);
+
+// socket connection
+io.on('connection', function (socket) {
+  console.log('a user connected');
+  socket.on('disconnect', function (){
+    console.log('user disconnected');
+  });
+});
 
 //passport Config
 require('./config/passport')(passport);
@@ -38,5 +50,8 @@ app.use(flash());
 app.use('/api/user', require('./routes/usersRoute'));
 app.use('/api/message', require('./routes/messagesRoute'));
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, console.log(`server started on port ${PORT}`));
+app.get('/', (req, res) => {
+  res.send('Welcome to my NG_CHAT_APP api')
+})
+
+http.listen(PORT, console.log(`server started on port ${PORT}`));

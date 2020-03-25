@@ -7,6 +7,11 @@ const User = require('../models/UserModel');
 const Conversation = require('../models/ConversationModel');
 
 
+const sendMessageViaSocket = (req, reply, reciepientId, newChat=true) => {
+  const io = req.app.get('socketio')
+  return io.emit(`message${reciepientId}`, {reply, newChat});
+}
+
 const getMessagesInConversation = (req, res, next) => { 
   // res.status(200).json({ conversation: req.params.conversationId });
   Message.find({ conversationId: req.params.conversationId })
@@ -57,7 +62,10 @@ router.get('/conversations', (req, res, next) => {
 
       // Set up empty array to hold conversations + most recent message
       let fullConversations = [];
-      conversations.forEach(function(conversation) {
+      conversations.forEach(async function(conversation) {
+        const unreadCount = await Message.find({ 'conversationId': conversation._id, 'read': 'false' })
+                                    .countDocuments().exec();
+
         Message.find({ 'conversationId': conversation._id })
           .sort('-createdAt')
           .limit(1)
@@ -70,7 +78,7 @@ router.get('/conversations', (req, res, next) => {
               res.send({ error: err });
               return next(err);
             }
-            fullConversations.push({ ...conversation.participants, message });
+            fullConversations.push({ ...conversation.participants, message, unreadCount });
             if(fullConversations.length === conversations.length) {
               return res.status(200).json({ conversations: fullConversations });
             }
@@ -109,8 +117,8 @@ router.post('/send/:reciepientId',[
           res.send({ error: err });
           return next(err);
         }
-        res.status(200).json({ message: 'Reply successfully sent!', reply });
-        return(next);
+        sendMessageViaSocket(req, reply, req.params.reciepientId, false);
+        return res.status(200).json({ message: 'Reply successfully sent!', reply });
       });
       
     } else {
@@ -134,9 +142,8 @@ router.post('/send/:reciepientId',[
             res.send({ error: err });
             return next(err);
           }
-    
-          res.status(200).json({ message: 'Conversation started!', conversationId: newConversation._id, reply });
-          return next();
+          sendMessageViaSocket(req, reply, req.params.reciepientId, true);
+          return res.status(200).json({ message: 'Conversation started!', conversationId: newConversation._id, reply });
         });
       });
     }

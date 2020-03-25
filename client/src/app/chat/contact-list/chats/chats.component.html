@@ -1,11 +1,12 @@
 <div>
   <div class="ml-3" *ngFor="let conversation of conversations?.conversations">
-    <a (click)="viewMessages(conversation[0], conversation.message[0].conversationId)">
+    <a class="chat-list" (click)="viewMessages(conversation[0], conversation.message[0].conversationId)">
       <div class="row">
         <div class="col-3 col-sm-auto col-md-auto p-2">
           <img class="img-fluid profile-img" [src]=imageData>
         </div>
         <div class="col-9 p-2">
+          <span class="badge badge-primary badge-pill mr-2">{{ conversation.unreadCount }}</span>
           <p><b>{{ conversation[0].firstname }} {{ conversation[0].lastname }}</b></p>
           <p class="line-clamp">{{ conversation.message[0].body }}</p>
           <p class="text-secondary"><small>{{ conversation.message[0].createdAt }}</small></p>

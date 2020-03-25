@@ -7,16 +7,19 @@
       </div>
     </div>
     <div #scrollMe [scrollTop]="scrollMe.scrollHeight" style="overflow-y: scroll; height: 80vh;" class="card-body p-0">
-      <div style="width: fit-content;" *ngFor="let message of messages.conversation"
-      [ngClass]="{'bg-light ml-auto text-right' : message.author._id == loggedInUser._id}"
-      class="border rounded m-2 p-1">
-        <p class="m-0">{{ message.body }}</p>
-        <small class="text-muted">{{ message.createdAt }}</small>
+
+      <div class="w-50">
+        <div style="width: fit-content;" *ngFor="let message of messages.conversation"
+        [ngClass]="{'bg-light ml-auto text-right' : message.author._id == loggedInUser._id}"
+        class="border rounded m-2 p-1">
+          <p class="m-0">{{ message.body }}</p>
+          <small class="text-muted">{{ message.createdAt }}</small>
+        </div>
       </div>
       <div *ngIf="!messages.conversation">
         <div class="alert alert-info">
-          <p><strong>{{ errorMessage.status }}</strong> {{ errorMessage.statusText }}, {{ errorMessage.message }}</p>
-          <p *ngIf="errorMessage.status == 404">You have no messages, send message to begin chat</p>
+          <p><strong>{{ errorMessage?.status }}</strong> {{ errorMessage.statusText }}, {{ errorMessage.message }}</p>
+          <p *ngIf="errorMessage?.status == 404">You have no messages, send message to begin chat</p>
         </div>
       </div>
     </div>

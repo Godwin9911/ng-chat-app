@@ -10,6 +10,10 @@
   display: none;
 }
 */
+.badge {
+  position: absolute;
+  right: 0;
+}
 
 .icon {
   width: 1rem;

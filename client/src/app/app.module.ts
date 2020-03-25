@@ -8,6 +8,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { WelcomeComponent } from './welcome/welcome.component';
 import { CommonModule } from '@angular/common';
 import { ScrollToBottomDirective } from './scroll-to-bottom.directive';
+import { SocketService } from './socket.service';
+import { AuthService } from './user/auth.service';
 
 @NgModule({
   declarations: [
@@ -20,9 +22,10 @@ import { ScrollToBottomDirective } from './scroll-to-bottom.directive';
     BrowserModule,
     HttpClientModule,
     UserModule,
-    AppRoutingModule,
+    AppRoutingModule
+    // SocketIoModule.forRoot(config)
   ],
-  providers: [],
+  providers: [AuthService, SocketService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

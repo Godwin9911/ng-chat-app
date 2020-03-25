@@ -8,7 +8,7 @@ import { AuthService } from '../user/auth.service';
         <div class="bg-dark">
           <div class="text-right bg-dark text-light fixed-top">
             <div class="p-3">
-              <span><b>{{ AuthUser.firstname }} {{ AuthUser.lastname }}</b></span>
+              <span><b>{{ AuthUser?.firstname }} {{ AuthUser?.lastname }}</b></span>
               <img class="image-fluid my-img ml-2" src="https://randomuser.me/api/portraits/men/20.jpg" />
             </div>
             <div class="container">
