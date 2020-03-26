@@ -10,6 +10,9 @@ import { ScrollToBottomDirective } from './scroll-to-bottom.directive';
 import { AuthService } from './user/auth.service';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AuthGuard } from './user/auth.guard';
+import { CoreModule } from './core/core.module';
+import { SocketService } from './socket.service';
 @NgModule({
   declarations: [
     AppComponent,
@@ -17,6 +20,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     ScrollToBottomDirective
   ],
   imports: [
+    CoreModule,
     BrowserAnimationsModule,
     CommonModule,
     BrowserModule,
@@ -25,7 +29,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     AppRoutingModule,
     NgxSpinnerModule
   ],
-  providers: [AuthService],
+  providers: [AuthService, AuthGuard, SocketService],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   bootstrap: [AppComponent]
 })

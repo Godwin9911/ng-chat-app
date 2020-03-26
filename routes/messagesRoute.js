@@ -6,16 +6,17 @@ const Message = require('../models/MessageModel');
 const User = require('../models/UserModel');
 const Conversation = require('../models/ConversationModel');
 
-
 const sendMessageViaSocket = (req, reply, reciepientId, newChat=true) => {
   const io = req.app.get('socketio');
   const sender = req.user._id;
   return io.emit(`message${reciepientId}`, {reply, sender, newChat});
 }
 
-const getMessagesInConversation = (req, res, next) => { 
-  // res.status(200).json({ conversation: req.params.conversationId });
-  Message.find({ conversationId: req.params.conversationId })
+const getMessagesInConversation = async (req, res, next) => { 
+  await Message.updateMany({ conversationId: req.params.conversationId,  author: { $ne: req.user._id }}, {
+    read: true
+  });
+  await Message.find({ conversationId: req.params.conversationId })
     .select('createdAt body author')
     // .sort('createdAt')
     .populate({
@@ -53,7 +54,7 @@ router.get('/conversations', (req, res, next) => {
       res.status(404);
       return next();
     }
-  }).sort('-createdAt')
+  }).sort('-updatedAt')
     .select('_id participants')
     .populate({
       path: 'participants',
@@ -69,7 +70,7 @@ router.get('/conversations', (req, res, next) => {
       // Set up empty array to hold conversations + most recent message
       let fullConversations = [];
       conversations.forEach(async function(conversation) {
-        const unreadCount = await Message.find({ 'conversationId': conversation._id, 'read': 'false' })
+        const unreadCount = await Message.find({ 'conversationId': conversation._id, 'read': 'false', author: { $ne: req.user._id }})
                                     .countDocuments().exec();
 
         Message.find({ 'conversationId': conversation._id })
@@ -112,6 +113,8 @@ router.post('/send/:reciepientId',[
     // check if users has conversation
     const conversation = await Conversation.findOne({participants: { $all: [ req.user._id, req.params.reciepientId] }});
     if (conversation) {
+      conversation.updatedAt = Date.now();
+      conversation.save();
 
       const reply = new Message({
         conversationId: conversation._id,

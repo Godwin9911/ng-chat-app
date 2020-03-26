@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AuthService } from '../user/auth.service';
 import { SocketService } from '../socket.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-chat',
@@ -10,7 +11,7 @@ import { SocketService } from '../socket.service';
           <div class="text-right bg-dark text-light fixed-top">
             <div class="p-3">
               <span><b>{{ AuthUser?.firstname }} {{ AuthUser?.lastname }}</b></span>
-              <img class="image-fluid my-img ml-2" src="https://randomuser.me/api/portraits/men/20.jpg" />
+              <img class="image-fluid my-img ml-2" src="https://alc-rivers-mentors.agedah99.now.sh/images/profilepics/@JohnDoe.png" />
             </div>
             <div class="container">
               <ul class="nav nav-tabs w-100">
@@ -43,11 +44,11 @@ import { SocketService } from '../socket.service';
         <div class="fixed-bottom">
           <div class="bg-light">
             <div class="container bottom-nav">
-            <ul class="nav nav-tabs nav-justified tab-margin">
+            <ul class="nav nav-tabs nav-justified">
             <li class="nav-item">
                 <a class="nav-link"
-                [routerLink]="['welcome']"
-                routerLinkActive='active'><i class="fa fa-home fa-2x"></i></a>
+                (click)="logout()"
+                routerLinkActive='active'><i class="fa fa-sign-out fa-2x"></i></a>
               </li>
               <li class="nav-item">
                 <a class="nav-link"
@@ -67,7 +68,6 @@ import { SocketService } from '../socket.service';
             </ul>
             </div>
           </div>
-
         </div>
     </div>
   `,
@@ -80,7 +80,8 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   constructor(private authservice: AuthService,
-              private socket: SocketService) {}
+              private socket: SocketService,
+              private router: Router) {}
 
   ngOnInit(): void {
     this.socket.setupSocketConnection();
@@ -88,6 +89,12 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.socket.disconnect();
+  }
+
+  logout() {
+    this.authservice.logout().subscribe(() => {
+      this.router.navigateByUrl('/login');
+    });
   }
 
 }

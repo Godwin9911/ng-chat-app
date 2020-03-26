@@ -13,6 +13,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 export class ChatsComponent implements OnInit, OnDestroy {
   errorMessage: Error;
   private subscription: Subscription;
+  // defaultImg = 'https://alc-rivers-mentors.agedah99.now.sh/images/profilepics/@JohnDoe.png';
 
   get conversations() {
     return this.contactService.coversations;
@@ -22,7 +23,7 @@ export class ChatsComponent implements OnInit, OnDestroy {
     return `https://randomuser.me/api/portraits/men/${Math.floor(Math.random() * 10)}.jpg`;
   }
   */
- imageData = `https://randomuser.me/api/portraits/men/${Math.floor(Math.random() * 10)}.jpg`;
+ // imageData = `https://randomuser.me/api/portraits/men/${Math.floor(Math.random() * 10)}.jpg`;
 
   constructor(private contactService: ContactService,
               private router: Router,

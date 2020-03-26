@@ -24,7 +24,7 @@ export class SocketService {
   }
 
   public setupSocketConnection() {
-    this.socket = io();
+    this.socket = io('http://localhost:5000');
   }
 
   public disconnect() {
@@ -36,11 +36,22 @@ export class SocketService {
     this.socket.emit( `message${reciepientId}`, message);
   }
 
+  public markAsRead(data) {
+    const socket = io('http://localhost:5000', {
+      forceNew: true
+    }).connect();
+    socket.on('connect', () => {
+      console.log('am here');
+      socket.emit( 'm', data);
+    });
+    console.log('finish');
+  }
+
   public getMessages = () => {
     // const socket = io('http://localhost:5000');
     return Observable.create((observer) => {
-      if (this.theUser._id) {
-          this.socket.on(`message${this.theUser._id}`, (message) => {
+      if (this.currentUser._id) {
+          this.socket.on(`message${this.currentUser._id}`, (message) => {
             observer.next(message);
         });
           return () => {
@@ -48,5 +59,7 @@ export class SocketService {
           };
       }
     });
-}
+  }
+
+  // Add is typing feature
 }

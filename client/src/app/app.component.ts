@@ -22,6 +22,7 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     // this.spinner.show();
     this.authservice.checkAuthenticationStatus().subscribe({
+      error: () => localStorage.clear(),
       complete: () => this.router.navigateByUrl('/chat')
     });
 

@@ -11,9 +11,11 @@ import { Error } from '../core/error';
 export class AuthService {
 private currentUserSubject: BehaviorSubject<User>;
 public currentUser: Observable<User>;
+  redirectUrl: string;
 
 get isLoggedIn(): boolean {
-  return !!this.currentUser;
+  if (this.currentUserSubject.value) { return true; }
+  return false;
 }
 
   constructor(private http: HttpClient) {
@@ -62,6 +64,7 @@ get isLoggedIn(): boolean {
 
   logout() {
     this.currentUser = null;
+    localStorage.clear();
     return this.http.get<User>(`${this.userUrl}/logout`);
   }
 

@@ -68,6 +68,8 @@ export class ConversationComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (msg) => {
           if (this.selectedUser._id === msg.sender) {
+            // mark as read
+            // this.socketService.markAsRead(msg);
             return this.conversationService.messages.conversation = [ ...this.conversationService.messages.conversation, msg.reply];
           }
           return;

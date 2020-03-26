@@ -3,20 +3,20 @@
     <a class="chat-list" (click)="viewMessages(conversation[0], conversation.message[0].conversationId)">
       <div class="row">
         <div class="col-3 col-sm-auto col-md-auto p-2">
-          <img class="img-fluid profile-img" [src]=imageData>
+          <img class="img-fluid profile-img border" src="assets/images/img.png">
         </div>
         <div class="col-9 p-2">
-          <span class="badge badge-primary badge-pill mr-2">{{ conversation.unreadCount }}</span>
+          <span *ngIf="conversation.unreadCount" class="badge badge-primary badge-pill mr-2">{{ conversation.unreadCount }}</span>
           <p><b>{{ conversation[0].firstname }} {{ conversation[0].lastname }}</b></p>
           <p class="line-clamp">{{ conversation.message[0].body }}</p>
-          <p class="text-secondary"><small>{{ conversation.message[0].createdAt }}</small></p>
+          <p class="text-secondary"><small>{{ conversation.message[0].createdAt | timePipe }}</small></p>
         </div>
       </div>
       <hr>
     </a>
   </div>
   <div class="mt-5">
-    <div *ngIf=!conversations?.conversations class="text-center">
+    <div *ngIf="!conversations?.conversations"  class="text-center">
       <img class="image-responsive w-25 mt-5" src="assets/images/nochat.svg">
       <div>You have no chats</div>
       <button class="btn btn-outline-success" [routerLink]="['/chat/contacts']" routerLinkActive="router-link-active" >Begin Chat</button>

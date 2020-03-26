@@ -15,18 +15,36 @@ const http = require('http').createServer(app);
 const io = require('socket.io')(http);
 app.set('socketio', io);
 
+
+const Message = require('./models/MessageModel');
+
 let socket_id = [];
+
+io.sockets.on('m', (data) => {
+  console.log(data);
+});
 
 // socket connection
 io.on('connection', function (socket) {
-  console.log('a user connected');
   socket_id.push(socket.id);
   if ( socket_id[0] === socket.id) {
     io.removeAllListeners('connection');
     console.log(socket_id);
   }
+  console.log(socket_id.length + ' user connected');
+
+  /*socket.on('m', (data) => {
+    console.log(data);
+    /*await Message.updateMany({ conversationId: req.params.conversationId,  author: { $ne: req.user._id }}, {
+      read: true
+    });
+  });
+  */
+
   socket.on('disconnect', function (){
+    socket_id = socket_id.filter(item => item != socket._id);
     console.log('user disconnected');
+    console.log(socket_id.length + ' users connected');
   });
 });
 
