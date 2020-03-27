@@ -38,10 +38,38 @@ export class LoginComponent implements OnInit {
           },
           error: (err: Error)  =>  {
             this.spinner.hide();
-            this.errorMessage = `${err.statusText}, ${err.message || ''}`
+            this.errorMessage = `${err.statusText}, ${err.message || ''}`;
           }
         });
     }
+  }
+
+  googleLogin() {
+    // this.spinner.show();
+    this.authservice.loginWithGoogle()
+    .subscribe({
+      next: (data: User) => {
+        if (this.authservice.isLoggedIn) {
+          // this.spinner.hide();
+          this.router.navigate(['/chat']);
+        }
+      },
+      error: (err: Error)  =>  {
+        // this.spinner.hide();
+        this.errorMessage = `${err.statusText}, ${err.message || ''}`;
+      }
+    });
+  }
+
+  log() {
+
+    window.open('/api/auth/google', '_self');
+    // window.open('/api/auth/google',"mywindow","location=1,status=1,scrollbars=1, width=800,height=800");
+    /*let listener = window.addEventListener('message', (message) => {
+      console.log(message);
+      //message will contain facebook user and details
+    });
+    */
   }
 
 }

@@ -14,7 +14,7 @@
           [ngClass]="{'bg-light ml-auto text-right' : message.author._id == loggedInUser._id}"
           class="border rounded m-2 p-1 dont-break-out">
           <p class="m-0">{{ message.body }}</p>
-          <small class="text-muted">{{ message.createdAt | timePipe}}</small>
+          <p><small class="text-muted">{{ message.createdAt | timePipe}}</small></p>
         </div>
       </span>
       </div>

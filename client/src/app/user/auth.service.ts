@@ -62,6 +62,19 @@ get isLoggedIn(): boolean {
       );
   }
 
+  loginWithGoogle(): Observable<User> {
+    return this.http.get<User>('api/auth/google/')
+      .pipe(
+        tap( data => {
+          if ( data instanceof Object) {
+            localStorage.setItem('currentUser', JSON.stringify(data));
+            this.currentUserSubject.next(data);
+          }
+        }),
+        catchError(this.handleError)
+      );
+  }
+
   logout() {
     this.currentUser = null;
     localStorage.clear();

@@ -1,6 +1,6 @@
 const LocalStrategy = require('passport-local').Strategy;
-const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
+const GoogleStrategy = require('passport-google-oauth2').Strategy;
 
 //Load User Model
 const User = require('../models/UserModel');
@@ -8,6 +8,34 @@ const Conversation = require('../models/ConversationModel');
 
 
 module.exports = function(passport) {
+  async function saveOrCreateNewUser(profile, theProvider, done) {
+    let user = await User.findOne({ email: profile.email });
+    if (!user) {
+      user = new User();
+      user.firstname = profile.given_name;
+      user.lastname = profile.family_name;
+      user.email = profile.email;
+      user.picture = profile.picture;
+      user.save();
+      return done(null, user);
+    }
+    return done(null, user);
+  }
+
+
+  passport.use(
+    new GoogleStrategy({
+      clientID: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      callbackURL: process.env.GOOGLE_CALLBACK,
+      passReqToCallback: true
+    },
+    ((request, accessToken, refreshToken, profile, done) => {
+      // console.log(profile);
+      saveOrCreateNewUser(profile, 'google', done);
+    }))
+  );
+
   passport.use(
     new LocalStrategy({usernameField: 'email'}, (email, password, done) => {
     // Match user

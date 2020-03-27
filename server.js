@@ -79,10 +79,11 @@ app.use(flash());
 //routes
 app.use('/api/user', require('./routes/usersRoute'));
 app.use('/api/message', require('./routes/messagesRoute'));
+app.use('/api/auth/google', require('./routes/googleLoginRouter'));
 
 /*app.get('/', (req, res) => {
-  res.send('Welcome to my NG_CHAT_APP api')
-})
+  res.send('<a href="/api/auth/google">Click me to log in using Google</a>')
+});
 */
 
 // serve static assets in prod

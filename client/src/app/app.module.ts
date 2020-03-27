@@ -13,6 +13,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AuthGuard } from './user/auth.guard';
 import { CoreModule } from './core/core.module';
 import { SocketService } from './socket.service';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
 @NgModule({
   declarations: [
     AppComponent,
@@ -27,7 +29,8 @@ import { SocketService } from './socket.service';
     HttpClientModule,
     UserModule,
     AppRoutingModule,
-    NgxSpinnerModule
+    NgxSpinnerModule,
+    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
   ],
   providers: [AuthService, AuthGuard, SocketService],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
