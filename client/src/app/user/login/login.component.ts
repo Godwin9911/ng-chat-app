@@ -33,7 +33,7 @@ export class LoginComponent implements OnInit {
           next: (data: User) => {
             if (this.authservice.isLoggedIn) {
               this.spinner.hide();
-              this.router.navigate(['/chat']);
+              window.open('/chat/current-chats', '_self');
             }
           },
           error: (err: Error)  =>  {
