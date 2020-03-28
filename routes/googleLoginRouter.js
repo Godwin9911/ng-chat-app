@@ -13,13 +13,29 @@ GoogleLoginRouter.get('/',
 
 GoogleLoginRouter.get('/callback',
   passport.authenticate('google', {
-    successRedirect: '/chat',
+    successRedirect: '/api/auth/google/success',
     failureRedirect: '/api/auth/google/failure'
   }));
 
   
 GoogleLoginRouter.get('/success', (req, res) => {
-  res.status(200).json(req.user);
+  const user = JSON.stringify({
+    user: req.user
+  });
+  let responseHtml = `
+    <html>
+      <head>
+        <title>Main</title>
+      </head>
+      <body>
+        <p>Logging Into website, please wait...</p>
+      </body>
+      <script>
+        window.opener.postMessage(${user}, '*');
+        window.close();
+      </script>
+    </html>`
+    res.status(200).send(responseHtml);
 });
 
 GoogleLoginRouter.get('/failure', (req, res) => {

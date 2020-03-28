@@ -6,6 +6,9 @@
 * {
   font-family: 'Noto Sans JP', sans-serif;
 }
+small {
+  font-size: 0.6rem;
+}
 /*.outlet::-webkit-scrollbar {
   display: none;
 }

@@ -19,8 +19,12 @@ get isLoggedIn(): boolean {
 }
 
   constructor(private http: HttpClient) {
-    this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentUser')));
-    this.currentUser = this.currentUserSubject.asObservable();
+    try {
+      this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentUser')));
+      this.currentUser = this.currentUserSubject.asObservable();
+    } catch (e) {
+      localStorage.clear();
+    }
   }
 
   public get CurrentUserValue(): User {
@@ -62,17 +66,15 @@ get isLoggedIn(): boolean {
       );
   }
 
-  loginWithGoogle(): Observable<User> {
-    return this.http.get<User>('api/auth/google/')
-      .pipe(
-        tap( data => {
-          if ( data instanceof Object) {
-            localStorage.setItem('currentUser', JSON.stringify(data));
-            this.currentUserSubject.next(data);
-          }
-        }),
-        catchError(this.handleError)
-      );
+  SocialLogin(userData: User) {
+    return new BehaviorSubject<User>(userData).asObservable()
+              .pipe(
+                tap (data => {
+                  localStorage.setItem('currentUser', JSON.stringify(data));
+                  this.currentUserSubject.next(data);
+                }),
+                catchError(this.handleError)
+              );
   }
 
   logout() {

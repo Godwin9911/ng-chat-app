@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ConversationComponent } from './conversation/conversation.component';
 import { RouterModule } from '@angular/router';
@@ -10,6 +10,7 @@ import { FormsModule } from '@angular/forms';
 import { SocketService } from '../socket.service';
 import { AuthGuard } from '../user/auth.guard';
 import { TimePipe } from '../core/time-pipe.pipe';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 
 @NgModule({
@@ -41,11 +42,14 @@ import { TimePipe } from '../core/time-pipe.pipe';
           { path: 'settings', component: SettingsComponent }
         ]
       },
-    ])
+    ]),
+    NgxSpinnerModule,
   ],
   providers: [
+    NgxSpinnerModule,
     SocketService,
     AuthGuard
-  ]
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class ChatModule { }

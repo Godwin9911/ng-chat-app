@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { throwError, Observable } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { catchError, tap, finalize } from 'rxjs/operators';
 import { Error } from '../../core/error';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Injectable({
   providedIn: 'root'
@@ -14,13 +15,16 @@ export class ConversationService {
     this.messages = msg;
   }
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient,
+              private spinner: NgxSpinnerService) { }
 
   private messageUrl = 'api/message';
 
   getMessages(id): Observable<any> {
+    this.spinner.show();
     return this.http.get(`${this.messageUrl}/conversations/${id}`)
       .pipe(
+        finalize(() => this.spinner.hide()),
         tap( data => this.messages  = data),
           // data => console.log(data)),
         catchError(this.handleError)
@@ -40,8 +44,13 @@ export class ConversationService {
   }
 
   checkConversation(userId): Observable<any> {
+    this.spinner.show();
+    setTimeout(() => {
+      console.log('her e og');
+    }, 5000)
     return this.http.get(`${this.messageUrl}/check-conversation/${userId}`)
       .pipe(
+        finalize(() => this.spinner.hide()),
         /*tap( data => {
           this.messages  = data;
           console.log(this.messages);

@@ -13,7 +13,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 export class ChatsComponent implements OnInit, OnDestroy {
   errorMessage: Error;
   private subscription: Subscription;
-  // defaultImg = 'https://alc-rivers-mentors.agedah99.now.sh/images/profilepics/@JohnDoe.png';
+  defaultImg = 'assets/images/img.png';
 
   get conversations() {
     return this.contactService.coversations;

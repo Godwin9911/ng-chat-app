@@ -1,15 +1,16 @@
+<ngx-spinner><p style="font-size: 20px; color: white">Loading...</p></ngx-spinner>
 <div class="container col-md-8">
   <div class="card border h-100">
     <div style="height: 10vh; position: relative;" class="card-header bg-dark text-light">
       <div class="chat-other">
-        <img class="chat-img"  src="assets/images/img.png" />
+        <img class="chat-img" [src]="selectedUser?.picture || defaultImg" />
         <span class="ml-2"><b>{{ selectedUser?.firstname }}</b></span>
       </div>
     </div>
-    <div #scrollMe [scrollTop]="scrollMe.scrollHeight" style="overflow-y: scroll; height: 70vh;" class="card-body p-0">
+    <div #scrollMe [scrollTop]="scrollMe.scrollHeight" style="overflow-y: scroll; height: 75vh;" class="card-body p-0">
 
       <div>
-        <span class="d-inline w-50" *ngFor="let message of messages.conversation">
+        <span class="d-inline w-50" *ngFor="let message of messages?.conversation">
           <div style="width: fit-content; width: -moz-fit-content;"
           [ngClass]="{'bg-light ml-auto text-right' : message.author._id == loggedInUser._id}"
           class="border rounded m-2 p-1 dont-break-out">
@@ -18,8 +19,8 @@
         </div>
       </span>
       </div>
-      <div *ngIf="!messages.conversation">
-        <div class="alert alert-info">
+      <div *ngIf="!messages.conversation"  class="alert alert-info">
+        <div>
           <p><strong>{{ errorMessage?.status }}</strong> {{ errorMessage.statusText }}, {{ errorMessage.message }}</p>
           <p *ngIf="errorMessage?.status == 404">You have no messages, send message to begin chat</p>
         </div>

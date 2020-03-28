@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { AuthService } from '../user/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-welcome',
@@ -6,19 +8,31 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./welcome.component.css']
 })
 export class WelcomeComponent implements OnInit {
+  errorMessage;
 
-  constructor() { }
+  constructor(private authservice: AuthService,
+              private router: Router) { }
 
   ngOnInit() {
   }
-  log() {
-    window.open('https://ngchatapp.herokuapp.com/api/auth/google', '_self');
-    // window.open('/api/auth/google',"mywindow","location=1,status=1,scrollbars=1, width=800,height=800");
-    /*let listener = window.addEventListener('message', (message) => {
-      console.log(message);
-      //message will contain facebook user and details
+
+  googleLogin() {
+    // window.open('/api/auth/google', '_self');
+    window.open('/api/auth/google', 'mywindow', 'location=1,status=1,scrollbars=1, width=800,height=800');
+    window.addEventListener('message', (message) => {
+      // console.log(message);
+      this.authservice.SocialLogin(message.data.user)
+      .subscribe({
+        next: (data) => {
+          if (this.authservice.isLoggedIn) {
+            this.router.navigate(['/chat']);
+          }
+        },
+        error: (err: Error)  =>  {
+          this.errorMessage = `${err.message || ''}`;
+        }
+      });
     });
-    */
   }
 
 }

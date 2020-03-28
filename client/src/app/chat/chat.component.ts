@@ -10,8 +10,8 @@ import { Router } from '@angular/router';
         <div class="bg-dark">
           <div class="text-right bg-dark text-light fixed-top">
             <div class="p-3">
-              <span><b>{{ AuthUser?.firstname }} {{ AuthUser?.lastname }}</b></span>
-              <img class="image-fluid my-img ml-2" src="https://alc-rivers-mentors.agedah99.now.sh/images/profilepics/@JohnDoe.png" />
+              <span><b>{{ AuthUser?.firstname | titlecase }} {{ AuthUser?.lastname | titlecase }}</b></span>
+              <img class="image-fluid my-img ml-2" [src]="AuthUser.picture || default" />
             </div>
             <div class="container">
               <ul class="nav nav-tabs w-100">
@@ -74,6 +74,7 @@ import { Router } from '@angular/router';
   styles: []
 })
 export class ChatComponent implements OnInit, OnDestroy {
+  default = 'assets/images/img.png';
 
   get AuthUser() {
     return this.authservice.CurrentUserValue;

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, OnChanges, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild, OnChanges, OnDestroy, AfterViewInit } from '@angular/core';
 import { ConversationService } from './conversation.service';
 import { Route, ActivatedRoute, ActivatedRouteSnapshot, Router, NavigationStart } from '@angular/router';
 import { ContactService } from '../contact-list/contact.service';
@@ -28,6 +28,7 @@ export class ConversationComponent implements OnInit, OnDestroy {
   _id;
   loggedInUser = this.authUser.CurrentUserValue;
   isloading = false;
+  defaultImg = 'assets/images/img.png';
 
   get messages() {
     return this.conversationService.messages;
@@ -60,7 +61,7 @@ export class ConversationComponent implements OnInit, OnDestroy {
 }
 
   ngOnInit() {
-    this.spinner.show();
+    // this.spinner.show();
     this.socketService.setupSocketConnection();
     this.conversationService.clearMessages = [];
     this.subscriptionOne = this.socketService
@@ -81,16 +82,18 @@ export class ConversationComponent implements OnInit, OnDestroy {
     if (this.route.snapshot.paramMap.get('name') === 'contacts') {
           return this.subscriptionTwo =  this.conversationService.checkConversation(id)
           .subscribe({
-            next: data => this.conversationService.messages = data,
-            error: (err) => { this.errorMessage = err; this.spinner.hide(); },
-            complete: () => this.spinner.hide()
+            next: data => {
+              this.conversationService.messages = data;
+            },
+            error: (err) => { this.errorMessage = err; /*his.spinner.hide();*/ },
+            // complete: () => this.spinner.hide()
           });
       }
     return this.subscriptionThree = this.conversationService.getMessages(id)
       .subscribe({
-        // next: data => console.log('get messages'),
-        error: (err) => { this.errorMessage = err; this.spinner.hide(); },
-        complete: () => this.spinner.hide()
+        // next: data => this.spinner.hide(),
+        error: (err) => { this.errorMessage = err; /*this.spinner.hide();*/ },
+        // complete: () => this.spinner.hide()
       });
   }
 

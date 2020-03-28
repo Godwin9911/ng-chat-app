@@ -11,7 +11,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 })
 export class ContactsComponent implements OnInit {
   errorMessage: Error;
-  defaultImg = 'https://alc-rivers-mentors.agedah99.now.sh/images/profilepics/@JohnDoe.png';
+  defaultImg = 'assets/images/img.png';
 
   get contacts() {
     return this.contactService.contacts;

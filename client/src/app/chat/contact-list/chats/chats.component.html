@@ -3,12 +3,12 @@
     <a class="chat-list" (click)="viewMessages(conversation[0], conversation.message[0].conversationId)">
       <div class="row">
         <div class="col-3 col-sm-auto col-md-auto p-2">
-          <img class="img-fluid profile-img border" src="assets/images/img.png">
+          <img class="img-fluid profile-img border" [src]="conversation[0].picture || defaultImg">
         </div>
         <div class="col-9 p-2">
           <span *ngIf="conversation.unreadCount" class="badge badge-primary badge-pill mr-2">{{ conversation.unreadCount }}</span>
-          <p><b>{{ conversation[0].firstname }} {{ conversation[0].lastname }}</b></p>
-          <p class="line-clamp">{{ conversation.message[0].body }}</p>
+          <p><b>{{ conversation[0].firstname | titlecase }} {{ conversation[0].lastname | titlecase }}</b></p>
+          <p class="line-clamp text-primary">{{ conversation.message[0].body }}</p>
           <p class="text-secondary"><small>{{ conversation.message[0].createdAt | timePipe }}</small></p>
         </div>
       </div>
