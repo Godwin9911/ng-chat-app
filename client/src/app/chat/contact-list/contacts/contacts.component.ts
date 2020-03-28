@@ -27,12 +27,11 @@ export class ContactsComponent implements OnInit {
               ) { }
 
   ngOnInit(): void {
-    this.spinner.show();
     this.contactService.getContacts()
       .subscribe({
         // next: (data) => this.conversations = data,
         error: (err) => this.errorMessage = err,
-        complete: () => this.spinner.hide()
+        // complete: () => this.spinner.hide()
       });
   }
 

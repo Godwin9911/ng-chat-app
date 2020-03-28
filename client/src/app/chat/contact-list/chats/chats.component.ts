@@ -39,7 +39,6 @@ export class ChatsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.spinner.show();
     this.subscription = this.socketService
       .getMessages()
       .subscribe((msg) => {
@@ -68,8 +67,8 @@ export class ChatsComponent implements OnInit, OnDestroy {
     return this.contactService.getConversations()
       .subscribe({
         // next: (data) => console.log(data),
-        error: (err) => { this.errorMessage = err;  this.spinner.hide();},
-        complete: () => this.spinner.hide()
+        error: (err) =>  this.errorMessage = err,
+        // complete: () => this.spinner.hide()
       });
   }
 

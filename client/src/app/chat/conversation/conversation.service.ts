@@ -38,16 +38,13 @@ export class ConversationService {
         /*tap( data => {
           this.updateMessages();
         }),*/
-          //console.log(data)),
+          // console.log(data)),
         catchError(this.handleError)
       );
   }
 
   checkConversation(userId): Observable<any> {
     this.spinner.show();
-    setTimeout(() => {
-      console.log('her e og');
-    }, 5000)
     return this.http.get(`${this.messageUrl}/check-conversation/${userId}`)
       .pipe(
         finalize(() => this.spinner.hide()),

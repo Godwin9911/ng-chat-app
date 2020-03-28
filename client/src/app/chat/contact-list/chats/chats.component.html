@@ -3,7 +3,7 @@
     <a class="chat-list" (click)="viewMessages(conversation[0], conversation.message[0].conversationId)">
       <div class="row">
         <div class="col-3 col-sm-auto col-md-auto p-2">
-          <img class="img-fluid profile-img border" [src]="conversation[0].picture || defaultImg">
+          <img class="img-fluid profile-img border" [src]="conversation[0]?.picture || defaultImg">
         </div>
         <div class="col-9 p-2">
           <span *ngIf="conversation.unreadCount" class="badge badge-primary badge-pill mr-2">{{ conversation.unreadCount }}</span>
