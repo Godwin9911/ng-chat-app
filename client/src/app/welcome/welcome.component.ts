@@ -25,7 +25,7 @@ export class WelcomeComponent implements OnInit {
       .subscribe({
         next: (data) => {
           if (this.authservice.isLoggedIn) {
-            this.router.navigate(['/chat/current-chats']);
+            window.open('/chat/current-chats', '_self');
           }
         },
         error: (err: Error)  =>  {
