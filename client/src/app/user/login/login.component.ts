@@ -53,7 +53,7 @@ export class LoginComponent implements OnInit {
       .subscribe({
         next: (data) => {
           if (this.authservice.isLoggedIn) {
-            this.router.navigate(['/chat']);
+            this.router.navigate(['/chat/current-chats']);
             // this.router.navigateByUrl('/chat');
           }
         },
