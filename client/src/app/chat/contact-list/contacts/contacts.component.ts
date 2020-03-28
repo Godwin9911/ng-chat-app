@@ -35,7 +35,7 @@ export class ContactsComponent implements OnInit {
       });
   }
 
-  checkConversation(contact){
+  checkConversation(contact) {
     this.contactService.selUser = contact;
     this.router.navigateByUrl(`/conversation/contacts/${contact._id}`);
   }

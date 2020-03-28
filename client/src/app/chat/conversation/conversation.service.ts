@@ -31,7 +31,8 @@ export class ConversationService {
       );
   }
 
-  sendMessage(composedMessage, reciepientId): Observable<any> {
+  sendMessage(composedMessage: any, reciepientId: any): Observable<any> {
+    // tslint:disable-next-line: object-literal-key-quotes
     const headers = new HttpHeaders({ 'Content-Type': 'application/json', 'Accept': 'application/json' });
     return this.http.post<any>(`${this.messageUrl}/send/${reciepientId}`, {composedMessage}, { headers })
       .pipe(

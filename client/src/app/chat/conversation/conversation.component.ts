@@ -24,8 +24,9 @@ export class ConversationComponent implements OnInit, OnDestroy {
   private subscriptionThree: Subscription;
   selectedUser = this.contactService.selectedUser;
   errorMessage: Error;
-  composedMessage;
-  _id;
+  composedMessage: any;
+  // tslint:disable-next-line: variable-name
+  _id: any;
   loggedInUser = this.authUser.CurrentUserValue;
   isloading = false;
   defaultImg = 'assets/images/img.png';

@@ -48,12 +48,13 @@ export class LoginComponent implements OnInit {
     // window.open('/api/auth/google', '_self');
     window.open('http://ngchatapp.herokuapp.com/api/auth/google', 'mywindow', 'location=1,status=1,scrollbars=1,width=800,height=800');
     window.addEventListener('message', (message) => {
-      // console.log(message);
+      console.log(message);
       this.authservice.SocialLogin(message.data.user)
       .subscribe({
         next: (data) => {
           if (this.authservice.isLoggedIn) {
             this.router.navigate(['/chat']);
+            // this.router.navigateByUrl('/chat');
           }
         },
         error: (err: Error)  =>  {

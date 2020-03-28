@@ -3,7 +3,6 @@ import { ContactService } from '../contact.service';
 import { Router, NavigationEnd, NavigationStart } from '@angular/router';
 import { SocketService } from 'src/app/socket.service';
 import { Subscription } from 'rxjs';
-import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-chats',
@@ -18,17 +17,9 @@ export class ChatsComponent implements OnInit, OnDestroy {
   get conversations() {
     return this.contactService.coversations;
   }
-
-  /*get imageData() {
-    return `https://randomuser.me/api/portraits/men/${Math.floor(Math.random() * 10)}.jpg`;
-  }
-  */
- // imageData = `https://randomuser.me/api/portraits/men/${Math.floor(Math.random() * 10)}.jpg`;
-
   constructor(private contactService: ContactService,
               private router: Router,
-              private socketService: SocketService,
-              private spinner: NgxSpinnerService) {
+              private socketService: SocketService) {
 
     const routerEnv = router.events.subscribe((event: NavigationStart) => {
       if (event.navigationTrigger === 'popstate') {

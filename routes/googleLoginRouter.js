@@ -31,7 +31,7 @@ GoogleLoginRouter.get('/success', (req, res) => {
         <p>Logging Into website, please wait...</p>
       </body>
       <script>
-        window.opener.postMessage(${user}, '*');
+        window.opener.postMessage(${user}, 'https://ngchatapp.herokuapp.com/login');
         window.close();
       </script>
     </html>`
