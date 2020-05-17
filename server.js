@@ -87,11 +87,11 @@ app.use('/api/auth/google', require('./routes/googleLoginRouter'));
 */
 
 // serve static assets in prod
-if (process.env.NODE_ENV === 'production') {
+// if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, 'client', 'dist', 'client')));
   app.get('/*', (req, res) => {
     res.sendFile(path.resolve(__dirname, 'client', 'dist', 'client', 'index.html'));
   });
- }
+ //}
 
 http.listen(PORT, console.log(`server started on port ${PORT}`));
