@@ -21,7 +21,7 @@
     "bootswatch": "^4.4.1",
     "connect-flash": "^0.1.1",
     "dotenv": "^8.2.0",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "express-session": "^1.17.0",
     "express-validator": "^6.4.0",
     "font-awesome": "^4.7.0",
